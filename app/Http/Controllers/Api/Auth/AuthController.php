@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
 
+    
+
     /**
      * Register a new user.
      *
