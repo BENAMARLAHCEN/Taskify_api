@@ -51,7 +51,6 @@ class StatusController extends Controller
 
         $task->status = $request->status;
         $task->save();
-
         return response()->json(['message' => 'Task status updated successfully', 'task' => $task], 200);
     }
 }
