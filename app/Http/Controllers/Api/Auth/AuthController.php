@@ -47,7 +47,9 @@ class AuthController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        return response()->json(['message' => 'User registered successfully'], 201);
+        $token = $user->createToken('authToken')->plainTextToken;
+
+        return response()->json(['message' => 'User registered successfully','token'=>$token,'user'=>$user], 201);
     }
 
 
@@ -78,8 +80,9 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = $user->createToken('authToken')->plainTextToken;
+            $message = 'Login successful';
 
-            return response()->json(['token' => $token], 200);
+            return response()->json(['message'=>$message,'token' => $token,'user'=>$user], 200);
         }
 
         return response()->json(['error' => 'Unauthorized'], 401);
@@ -103,5 +106,24 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
+
+
+    /**
+     * Get the authenticated user.
+     *
+     * @OA\Get(
+     *     path="/api/user",
+     *     summary="Get the authenticated user",
+     *     tags={"Authentication"},
+     *     security={{ "sanctum": {} }},
+     *     @OA\Response(response="200", description="User details"),
+     *     @OA\Response(response="401", description="Unauthenticated")
+     * )
+     */
+    public function user(Request $request)
+    {
+        return response()->json($request->user());
+    }
+    
 }
 
