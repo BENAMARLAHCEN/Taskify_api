@@ -76,4 +76,29 @@ class StatusControllerTest extends TestCase
                 'error' => 'Unauthorized',
             ]);
     }
+
+    /**
+     * Test updating the status of a task.
+     *
+     * @return void
+     */
+    public function testUpdateTaskStatusWhithEmptyStatus()
+    {
+        $user = User::factory()->create();
+        $task = Task::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->actingAs($user)->putJson("/api/v1/tasks/{$task->id}/status", [
+            'status' => '',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJson([
+                'message' => 'The status field is required.',
+                "errors" => [
+                    "status" => [
+                        "The status field is required."
+                    ]
+                ]
+            ]);
+    }
 }
