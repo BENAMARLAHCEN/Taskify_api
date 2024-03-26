@@ -21,7 +21,7 @@ class TaskController extends Controller
     {
         $user = Auth::user();
         $this->authorize('viewAny', Task::class);
-        $tasks = $user->tasks;
+        $tasks = Task::latest()->where('user_id', $user->id)->get();
         return response()->json(['tasks'=>$tasks]);
     }
 
