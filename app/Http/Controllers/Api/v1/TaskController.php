@@ -17,13 +17,12 @@ class TaskController extends Controller
      *     @OA\Response(response="200", description="List of tasks"),
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $this->authorize('viewAny', Task::class);
         $tasks = $user->tasks;
-        
-        return response()->json($tasks);
+        return response()->json(['tasks'=>$tasks]);
     }
 
     /**
@@ -111,6 +110,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
+
         $this->authorize('update', $task);
 
         $request->validate([
